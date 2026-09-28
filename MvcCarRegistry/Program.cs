@@ -1,4 +1,8 @@
+using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
+var connectionString = builder.Configuration.GetConnectionString("MvcCarRegistryContext") ?? throw new InvalidOperationException("Connection string 'MvcCarRegistryContext' not found.");
+
+builder.Services.AddDbContext<MvcCarRegistryContext>(options => options.UseSqlServer(connectionString));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
