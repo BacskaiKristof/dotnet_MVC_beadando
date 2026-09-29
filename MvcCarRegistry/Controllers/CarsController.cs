@@ -13,9 +13,24 @@ public class CarsController : Controller
     }
 
     // GET: CARS
-    public async Task<IActionResult> Index()    
+    public async Task<IActionResult> Index(string searchString)    
     {
-        return View(await _context.Car.ToListAsync());
+        
+        if(_context.Car == null)
+        {
+            return Problem("Entity saet 'ApplicationDbContext.Car' is null.");
+        }
+
+        var cars = from c in _context.Car
+                   select c;
+
+
+        if (!string.IsNullOrEmpty(searchString))
+        {
+            cars = cars.Where(c => c.Brand!.Contains(searchString));
+        }
+
+        return View(await cars.ToListAsync());
     }
 
     // GET: CARS/Details/5
